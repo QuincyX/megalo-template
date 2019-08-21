@@ -1,4 +1,4 @@
-# megalo-sample
+# megalo-template
 
 ## 运行
 
