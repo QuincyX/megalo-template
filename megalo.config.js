@@ -14,19 +14,22 @@ module.exports = {
       resourceQuery: /^\?vue/
     })
     // less自动注入全局变量功能 --start
-    const lessIndex = config.module.rules.findIndex(o => {
-      if (o.test) {
-        return o.test.toString().includes('less')
-      }
-    })
-    config.module.rules[lessIndex].use.push({
+    config.module.rules[
+      config.module.rules.findIndex(o => {
+        if (o.test) {
+          return o.test.toString().includes('less')
+        }
+      })
+    ].use.push({
       loader: 'style-resources-loader',
       options: {
         preProcessor: 'less',
         patterns: ['./src/style/mixin.less', './src/style/theme.less']
       }
     })
-    // less自动注入全局变量功能 --stop
+    // axios兼容配置
+    config.resolve.aliasFields = ['browser']
+
     return config
   },
   chainWebpack: chainConfig => {

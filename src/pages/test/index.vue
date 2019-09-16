@@ -38,6 +38,9 @@
       .label UI组件
       .content
         i-button(type="success" shape="circle" size="small" @click="$message.success('iview weapp 组件调用成功')") iview 按钮
+    .item
+      .label axios
+      .content {{res}}
   .listContent
     .item(v-for="i in 20" :key="i") list item {{i}}
   i-message#message
@@ -57,7 +60,8 @@ export default {
 		return {
 			time: Date.now(),
 			html: '<span style="font-size:20px;color:yellow;">html ok!</span>',
-			loading: false
+			loading: false,
+			res: ''
 		}
 	},
 	computed: {
@@ -68,9 +72,20 @@ export default {
 			this.loading = true
 			await this.$sleep().then(() => {})
 			this.loading = false
+		},
+		async getData() {
+			this.$loading.start()
+			const res = await this.$http.post(
+				'https://nodes-book.azurewebsites.net/api/Get-Book-By-ISBN-From-Google',
+				{ isbn: '9780385534246' }
+			)
+			this.res = res.items[0]
+			this.$loading.stop()
 		}
 	},
-	mounted() {}
+	mounted() {
+		this.getData()
+	}
 }
 </script>
 

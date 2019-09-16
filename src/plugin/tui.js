@@ -49,13 +49,15 @@ export default {
       }
     }
     // 自定义加载动画
+    let loadingInstance
     Vue.prototype.$loading = {
       start: val => {
-        return $Toast({
+        loadingInstance = $Toast({
           content: val || '加载中',
           type: 'loading',
           duration: 0
         })
+        return loadingInstance
       },
       stop: () => {
         return $Toast.hide()

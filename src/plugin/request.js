@@ -1,8 +1,7 @@
 import $store from '@/store'
 
 const isDev = process.env.NODE_ENV === 'development'
-
-const baseURL = process.env.VUE_APP_BASEURL + '/mdt-api/'
+const baseURL = process.env.VUE_APP_BASEURL + '/api/'
 
 Megalo.request.interceptors.before.use(
   option => {
@@ -11,18 +10,14 @@ Megalo.request.interceptors.before.use(
     }
     if (option.method == 'post' && $store.getters.token) {
       option.data = {
-        userToken: $store.getters.token,
+        token: $store.getters.token,
         ...option.data
       }
     }
     if (option.url.slice(0, 4) === 'http') {
       option.url = option.url
     } else {
-      if (option.url.substring(option.url.length - 5) !== '/v100') {
-        option.url = baseURL + option.url + '/v100'
-      } else {
-        option.url = baseURL + option.url
-      }
+      option.url = baseURL + option.url
     }
     return option
   },
