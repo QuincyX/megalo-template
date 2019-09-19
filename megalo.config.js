@@ -2,6 +2,7 @@ const path = require('path')
 function resolve(_path) {
   return path.resolve(process.cwd(), _path)
 }
+const qLessToolkit = require('@quincyx/less-toolkit')
 
 module.exports = {
   productionSourceMap: false,
@@ -13,23 +14,8 @@ module.exports = {
       loader: 'pug-plain-loader',
       resourceQuery: /^\?vue/
     })
-    // less自动注入全局变量功能 --start
-    config.module.rules[
-      config.module.rules.findIndex(o => {
-        if (o.test) {
-          return o.test.toString().includes('less')
-        }
-      })
-    ].use.push({
-      loader: 'style-resources-loader',
-      options: {
-        preProcessor: 'less',
-        patterns: ['./src/style/mixin.less', './src/style/theme.less']
-      }
-    })
     // axios兼容配置
     config.resolve.aliasFields = ['browser']
-
     return config
   },
   chainWebpack: chainConfig => {
@@ -47,7 +33,17 @@ module.exports = {
   css: {
     loaderOptions: {
       css: {},
-      less: {},
+      less: {
+        plugins: [
+          new qLessToolkit({
+            extend: [
+              resolve('./src/style/theme.less'),
+              resolve('./src/style/mixin.less')
+            ]
+          })
+        ],
+        javascriptEnabled: true
+      },
       sass: {},
       stylus: {},
       px2rpx: {

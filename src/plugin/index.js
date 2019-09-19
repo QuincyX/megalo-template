@@ -4,7 +4,6 @@ import tui from '@/plugin/tui'
 import store from '@/plugin/store'
 import router from '@/plugin/router'
 import filter from '@/plugin/filter'
-import directive from '@/plugin/directive'
 import globalFunction from '@/plugin/globalFunction'
 import { globalMixin } from '@/utils/mixin'
 import axios from '@/plugin/axios'
@@ -17,7 +16,6 @@ Vue.use(tui)
 Vue.use(store)
 Vue.use(router)
 Vue.use(filter)
-Vue.use(directive)
 Vue.use(globalFunction)
 
 // 挂载 Ajax 对象

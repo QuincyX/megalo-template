@@ -35,8 +35,11 @@ export default {
     }
     Vue.mixin({
       mounted() {
-        router.route.path = this.$mp.page ? this.$mp.page.route : ''
-        router.route.query = this.$mp.query
+        if (this.$mp && this.$mp.page) {
+          router.route.fullPath = this.$mp.page.route
+          router.route.path = this.$mp.page.route.replace('pages', '')
+          router.route.query = this.$mp.query
+        }
       }
     })
     Vue.prototype.$route = router.route

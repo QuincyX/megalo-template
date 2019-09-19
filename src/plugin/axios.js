@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
+import $store from '@/store/index'
 Axios.defaults.adapter = mpAdapter
-
 const isDev = process.env.NODE_ENV === 'development'
 const axios = Axios.create()
 
@@ -14,9 +14,9 @@ axios.interceptors.request.use(
     if (option.url.slice(0, 4) === 'http') {
       option.url = option.url
     } else {
-      if (option.method == 'post' && $store.getters.token()) {
+      if (option.method == 'post' && $store.getters.token) {
         option.data = {
-          userToken: $store.getters.token(),
+          userToken: $store.getters.token,
           ...option.data
         }
       }
@@ -41,7 +41,6 @@ axios.interceptors.response.use(
   response => {
     if (response.data.code && response.data.code != 40001) {
       printError(response)
-      warning(response.data.message)
       return Promise.reject(response.data)
     } else {
       if (response.data.data && response.data.data.pageSize) {

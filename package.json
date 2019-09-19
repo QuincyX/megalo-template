@@ -1,6 +1,6 @@
 {
   "name": "megalo-sample",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev:wechat": "megalo-cli-service serve",
@@ -19,24 +19,24 @@
     ]
   },
   "devDependencies": {
-    "@megalo/babel-preset-app": "latest",
-    "@megalo/cli-service": "latest",
-    "@megalo/target": "latest",
-    "@megalo/template-compiler": "latest",
-    "less": "3.8.1",
-    "less-loader": "4.1.0",
-    "pug": "^2.0.3",
-    "pug-plain-loader": "^1.0.0",
-    "style-resources-loader": "^1.2.1"
+    "@megalo/babel-preset-app": "^1.0.0-alpha.4",
+    "@megalo/cli-service": "^1.0.0-beta.4",
+    "@megalo/target": "^0.7.4-0",
+    "@megalo/template-compiler": "^0.10.1",
+    "@quincyx/less-toolkit": "^0.1.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "pug": "^2.0.4",
+    "pug-plain-loader": "^1.0.0"
   },
   "dependencies": {
-    "@megalo/api": "latest",
-    "@megalo/vhtml-plugin": "latest",
+    "@megalo/api": "^0.5.7",
+    "@megalo/vhtml-plugin": "^0.1.2",
     "axios": "^0.19.0",
     "axios-miniprogram-adapter": "^0.2.4",
-    "megalo": "latest",
+    "megalo": "^0.10.1",
     "octoparse": "^0.4.2",
-    "vuex": "^3.1.0",
+    "vuex": "^3.1.1",
     "vuex-persistedstate": "^2.5.4"
   },
   "browserslist": [

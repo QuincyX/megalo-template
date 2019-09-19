@@ -1,4 +1,4 @@
-import $http from '@/plugin/request'
+import $http from '@/plugin/axios'
 
 export default {
   namespaced: false,
