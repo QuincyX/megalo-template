@@ -119,6 +119,7 @@ export default {
   },
   data() {
     return {
+      number: 0,
       text: '',
       textarea: '',
       date: '1980-06-15',
@@ -229,7 +230,7 @@ export default {
     },
     initValue() {
       if (this.type === 'number') {
-        this.number = this.value
+        this.number = Number(this.value)
       } else if (this.type === 'gender') {
         if (this.genderFormat === 'string') {
           this.gender = this.value
@@ -252,7 +253,7 @@ export default {
         }
         this.$emit('input', this.date)
       } else if (this.type === 'mobile') {
-        this.mobile = this.value
+        this.number = Number(this.value)
       } else if (this.type === 'password') {
         this.password = this.value
       } else if (this.type === 'picker') {

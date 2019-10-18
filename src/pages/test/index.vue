@@ -54,94 +54,94 @@ import { mapGetters } from 'vuex'
 import { sampleMixin } from '@/utils/mixin'
 import qLoading from '@/components/loading'
 export default {
-	components: { qLoading },
-	mixins: [sampleMixin],
-	data() {
-		return {
-			time: Date.now(),
-			html: '<span style="font-size:20px;color:yellow;">html ok!</span>',
-			loading: false,
-			res: ''
-		}
-	},
-	computed: {
-		...mapGetters(['count'])
-	},
-	methods: {
-		async handleLoading() {
-			this.loading = true
-			await this.$sleep().then(() => {})
-			this.loading = false
-		},
-		async getData() {
-			this.$loading.start()
-			const res = await this.$http.post(
-				'https://nodes-book.azurewebsites.net/api/Get-Book-By-ISBN-From-Google',
-				{ isbn: '9780385534246' }
-			)
-			this.res = res.items[0]
-			this.$loading.stop()
-		}
-	},
-	mounted() {
-		this.getData()
-	}
+  components: { qLoading },
+  mixins: [sampleMixin],
+  data() {
+    return {
+      time: Date.now(),
+      html: '<span style="font-size:20px;color:yellow;">html ok!</span>',
+      loading: false,
+      res: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['count'])
+  },
+  methods: {
+    async handleLoading() {
+      this.loading = true
+      await this.$sleep().then(() => {})
+      this.loading = false
+    },
+    async getData() {
+      this.$loading.start()
+      const res = await this.$http.post(
+        'https://nodes-book.azurewebsites.net/api/Get-Book-By-ISBN-From-Google',
+        { isbn: '9780385534246' }
+      )
+      this.res = res.items[0]
+      this.$loading.stop()
+    }
+  },
+  mounted() {
+    this.getData()
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .card {
-	.debug;
-	padding: 1em;
-	.item {
-		padding: 1em 0;
-		.border-bottom;
-		.label {
-			.inline;
-			.vtop;
-			padding-right: 1em;
-			text-align: right;
-			width: 8em;
-			&:after {
-				content: '：';
-				display: inline;
-			}
-		}
-		.content {
-			.inline;
-			.btn {
-				.inline;
-				.color;
-				margin-right: 20px;
-			}
-		}
-	}
+  .debug;
+  padding: 1em;
+  .item {
+    padding: 1em 0;
+    .borderBottom;
+    .label {
+      .inline;
+      .vtop;
+      padding-right: 1em;
+      text-align: right;
+      width: 8em;
+      &:after {
+        content: '：';
+        display: inline;
+      }
+    }
+    .content {
+      .inline;
+      .btn {
+        .inline;
+        .color;
+        margin-right: 20px;
+      }
+    }
+  }
 }
 .listContent {
-	.item {
-		padding: 5px;
-		.border-bottom;
-		.center;
-	}
+  .item {
+    padding: 5px;
+    .borderBottom;
+    .center;
+  }
 }
 .colorText {
-	animation: colorText 2s infinite;
+  animation: colorText 2s infinite;
 }
 @keyframes colorText {
-	0% {
-		color: #fff;
-	}
-	20% {
-		color: yellow;
-	}
-	50% {
-		color: blue;
-	}
-	80% {
-		color: green;
-	}
-	100% {
-		color: #fff;
-	}
+  0% {
+    color: #fff;
+  }
+  20% {
+    color: yellow;
+  }
+  50% {
+    color: blue;
+  }
+  80% {
+    color: green;
+  }
+  100% {
+    color: #fff;
+  }
 }
 </style>

@@ -169,17 +169,3 @@ const printReq = (type, val) => {
     console.log(val)
   }
 }
-const groupStart = val => {
-  let cord = []
-  while (cord.length < 7) {
-    let n = Math.floor(Math.random() * 7)
-    if (!cord.includes(rainbow[n])) {
-      cord.push(rainbow[n])
-    }
-  }
-  console.groupCollapsed(
-    '%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c ' + val,
-    ...cord,
-    'color: #333'
-  )
-}

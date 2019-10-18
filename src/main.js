@@ -7,7 +7,12 @@ app.$mount()
 
 export default {
   config: {
-    pages: ['pages/test/index', 'pages/home/index', 'pages/account/login'],
+    pages: [
+      'pages/home/index',
+      'pages/account/login',
+      'pages/article/index',
+      'pages/test/index'
+    ],
     window: {
       navigationBarBackgroundColor: '#333',
       navigationBarTextStyle: 'white',
