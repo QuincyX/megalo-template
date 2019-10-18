@@ -1,3 +1,9 @@
+/*
+ * @Author: QuincyX (likequincy@outlook.com)
+ * @Date: 2019-10-18 14:16:41
+ * @Last Modified by:   QuincyX
+ * @Last Modified time: 2019-10-18 14:16:41
+ */
 function getURL(val, query) {
   let result
   if (val === '/') {
@@ -8,7 +14,7 @@ function getURL(val, query) {
   if (query) {
     result = result + '?'
     Object.keys(query).forEach(name => {
-      result = result + name + '=' + query[name]
+      result = result + name + '=' + query[name] + '&'
     })
   }
   return result

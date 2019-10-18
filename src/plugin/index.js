@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VHtmlPlugin from '@megalo/vhtml-plugin'
-import tui from '@/plugin/tui'
+import ui from '@/plugin/tui'
 import store from '@/plugin/store'
 import router from '@/plugin/router'
 import filter from '@/plugin/filter'
@@ -12,7 +12,7 @@ import axios from '@/plugin/axios'
 import '@/style/iconfont/index.less'
 
 Vue.use(VHtmlPlugin)
-Vue.use(tui)
+Vue.use(ui)
 Vue.use(store)
 Vue.use(router)
 Vue.use(filter)

@@ -7,23 +7,46 @@ page {
 view {
   box-sizing: border-box;
 }
-img {
+img,
+image {
   max-width: 100%;
   max-height: 100%;
 }
 .page {
   position: relative;
   min-height: 100vh;
+  background: @background;
+}
+.pageWithTabBar {
+  .page;
   padding-bottom: 60px;
 }
 .fullPage {
-  position: relative;
+  .page;
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.listContent {
-  overflow: auto;
+.br {
+  height: 1em;
+}
+button {
+  text-align: center;
+  text-decoration: none;
+  font-weight: normal;
+  line-height: 1;
+  font-size: @fontSize;
+  position: relative;
+  display: inline-block;
+  color: inherit;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+button::after {
+  border: none;
 }

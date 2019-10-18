@@ -6,8 +6,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    global: require('./module/global').default,
-    user: require('./module/user').default
+    article: require('./module/article').default,
+    user: require('./module/user').default,
+    global: require('./module/global').default
   },
   plugins: [
     persistedState({

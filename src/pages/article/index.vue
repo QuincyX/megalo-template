@@ -9,36 +9,27 @@
 
 <template lang="pug">
 .article
-  .content(v-html="html.detail")
+  .content(v-html="articleDetail.content")
   i-message#message
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { route } from '@/utils/mixin.js'
 export default {
-	mixins: [route],
-	data() {
-		return {
-			html: {
-				title: '',
-				detail: ''
-			}
-		}
-	},
-	computed: {
-		...mapGetters([])
-	},
-	watch: {},
-	methods: {
-		async getArticle(id) {
-			this.html = await this.$http.post('/article/' + id)
-		}
-	},
-	mounted() {
-		if (this.route.query.id) {
-			this.getArticle(this.route.query.id)
-		}
-	}
+  data() {
+    return {}
+  },
+  computed: {
+    ...mapGetters(['articleDetail'])
+  },
+  watch: {},
+  methods: {
+    ...mapActions(['getArticleDetail'])
+  },
+  mounted() {
+    if (this.$route.query.id) {
+      this.getArticleDetail(this.$route.query.id)
+    }
+  }
 }
 </script>

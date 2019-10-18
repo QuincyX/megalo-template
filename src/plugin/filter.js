@@ -1,10 +1,13 @@
+/*
+ * @Author: QuincyX (likequincy@outlook.com)
+ * @Date: 2019-10-18 14:16:32
+ * @Last Modified by:   QuincyX
+ * @Last Modified time: 2019-10-18 14:16:32
+ */
 export default {
   install(Vue, option) {
     Vue.filter('formatDate', val => {
       if (val) {
-        if (typeof val === 'string') {
-          val = val.replace(/-/g, '/')
-        }
         let date = new Date(val)
         return (
           date.getFullYear() +
@@ -46,9 +49,6 @@ export default {
     })
     Vue.filter('formatFullDate', val => {
       if (val) {
-        if (typeof val === 'string') {
-          val = val.replace(/-/g, '/')
-        }
         let date = new Date(val)
         let currentY = new Date().getFullYear()
         return (
@@ -63,6 +63,15 @@ export default {
           ':' +
           (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
         )
+      } else {
+        return '-'
+      }
+    })
+    Vue.filter('formatAge', val => {
+      if (val) {
+        let date = new Date(val)
+        let currentY = new Date().getFullYear()
+        return currentY - date.getFullYear()
       } else {
         return '-'
       }

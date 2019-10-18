@@ -20,6 +20,7 @@ export default {
       'i-toast': '/static/iview/toast/index',
       'i-spin': '/static/iview/spin/index',
       'i-icon': '/static/iview/icon/index'
-    }
+    },
+    navigateToMiniProgramAppIdList: []
   }
 }

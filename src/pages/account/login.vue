@@ -97,7 +97,7 @@ export default {
 				.then(() => {
 					if (this.loginType === 'password') {
 						this.$store
-							.dispatch('user/loginByPhone', this.form)
+							.dispatch('user/loginByPassword', this.form)
 							.then(res => {
 								this.afterLogin(res)
 							})

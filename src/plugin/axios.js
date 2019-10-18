@@ -1,3 +1,9 @@
+/*
+ * @Author: QuincyX (likequincy@outlook.com)
+ * @Date: 2019-10-18 14:16:23
+ * @Last Modified by:   QuincyX
+ * @Last Modified time: 2019-10-18 14:16:23
+ */
 import Axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 import $store from '@/store/index'
@@ -5,8 +11,10 @@ Axios.defaults.adapter = mpAdapter
 const isDev = process.env.NODE_ENV === 'development'
 const axios = Axios.create()
 
-axios.defaults.baseURL = process.env.VUE_APP_BASEURL + '/api/'
+axios.defaults.baseURL = process.env.VUE_APP_BASEURL + '/api/v1/'
+axios.defaults.headers.common['X-Powered-By'] = 'likequincy@outlook.com'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.defaults.headers.post['Access-Control-Expose-Headers'] = 'x-refresh-token'
 axios.defaults.withCredentials = false
 
 axios.interceptors.request.use(
@@ -14,20 +22,19 @@ axios.interceptors.request.use(
     if (option.url.slice(0, 4) === 'http') {
       option.url = option.url
     } else {
-      if (option.method == 'post' && $store.getters.token) {
-        option.data = {
-          userToken: $store.getters.token,
-          ...option.data
-        }
+      if ($store.getters.token) {
+        option.headers['x-q-token'] = $store.getters.token
       }
     }
     if (option.data) {
-      if (option.data.totalPage || option.data.totalPage === 0) {
-        option.data.totalPage = undefined
-      }
-      if (option.data.totalRecord || option.data.totalRecord === 0) {
-        option.data.totalRecord = undefined
-      }
+      delete option.data.totalPage
+      delete option.data.total
+      delete option.data.finished
+    }
+    if (option.params) {
+      delete option.params.totalPage
+      delete option.params.total
+      delete option.params.finished
     }
     return option
   },
@@ -39,25 +46,22 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
-    if (response.data.code && response.data.code != 40001) {
+    if (response.data.code && response.data.code != 1) {
       printError(response)
       return Promise.reject(response.data)
     } else {
       if (response.data.data && response.data.data.pageSize) {
-        let finished = false
-        if (response.data.data.totalPage == 0) {
-          finished = true
-        } else if (response.data.data.totalPage == response.data.data.pageNo) {
-          finished = true
-        }
+        let finished =
+          response.data.data.totalPage == 0 ||
+          response.data.data.totalPage == response.data.data.pageNum
         printList(response, finished)
         return Promise.resolve({
           page: {
-            pageNum: response.data.data.pageNo,
+            pageNum: response.data.data.pageNum,
             pageSize: response.data.data.pageSize,
             totalPage: response.data.data.totalPage,
-            totalRecord: response.data.data.totalRecord,
-            finished: finished
+            totalNum: response.data.data.totalNum,
+            finished
           },
           list: response.data.data.results || [],
           other: response.data.data.other
@@ -75,6 +79,46 @@ axios.interceptors.response.use(
 
 export default axios
 
+const printError = response => {
+  if (isDev) {
+    console.groupCollapsed(
+      '%cerror >>>>>>>>>>>>>>> ' + response.config.url,
+      'color: #e74c3c'
+    )
+    printReq('request query', response.config.params)
+    printReq('request payload', response.config.data)
+    printMessage(response)
+    console.groupEnd()
+  }
+}
+const printList = (response, finished) => {
+  if (isDev) {
+    groupStart(response.config.method.toUpperCase() + ' ' + response.config.url)
+    printReq('request query', response.config.params)
+    printReq('request payload', response.config.data)
+    printRes('response page', {
+      pageNum: response.data.page.pageNo,
+      pageSize: response.data.page.pageSize,
+      totalPage: response.data.page.totalPage,
+      totalRecord: response.data.page.totalRecord,
+      finished: finished
+    })
+    printRes('response list', response.data.results)
+    printMessage(response)
+    console.groupEnd()
+  }
+}
+const printData = response => {
+  if (isDev) {
+    groupStart(response.config.method.toUpperCase() + ' ' + response.config.url)
+    printReq('request query', response.config.params)
+    printReq('request payload', response.config.data)
+    printRes('response data', response.data.data || response.data)
+    printMessage(response)
+    console.groupEnd()
+  }
+}
+
 const rainbow = [
   'color: #e74c3c',
   'color: #e67e22',
@@ -85,45 +129,6 @@ const rainbow = [
   'color: #9b59b6',
   'color: #333'
 ]
-const print = val => {
-  console.log('%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c ' + val, ...rainbow)
-}
-const printColor = val => {
-  console.log(
-    '%c' + val,
-    'background-color: #e67e22;color:#fff;padding:5px 10px'
-  )
-}
-const printGradientRed = val => {
-  console.log(
-    '%c' + val,
-    'background:linear-gradient(to right,#ff7f50, #ff6b81);color:#fff;padding:5px 10px'
-  )
-}
-const printRed = val => {
-  console.log(
-    '%c' + val,
-    'background-color: #ff4757;color:#fff;padding:5px 10px'
-  )
-}
-const printYellow = val => {
-  console.log(
-    '%c' + val,
-    'background-color: #ffa502;color:#fff;padding:5px 10px'
-  )
-}
-const printBlue = val => {
-  console.log(
-    '%c' + val,
-    'background-color: #1e90ff;color:#fff;padding:5px 10px'
-  )
-}
-const printGreen = val => {
-  console.log(
-    '%c' + val,
-    'background-color: #2ed573;color:#fff;padding:5px 10px'
-  )
-}
 const groupStart = val => {
   let cord = []
   while (cord.length < 7) {
@@ -138,72 +143,43 @@ const groupStart = val => {
     'color: #333'
   )
 }
-const groupStartError = val => {
-  console.groupCollapsed('%cerror >>>>>>>>>>>>>>> ' + val, 'color: #e74c3c')
-}
-const printError = response => {
-  if (isDev) {
-    groupStartError(
-      response.config.method.toUpperCase() + ' ' + response.config.url
+const printMessage = response => {
+  if (response && response.data && response.data.msg) {
+    console.log(
+      '%c' + 'response message: ' + response.data.msg,
+      'background:linear-gradient(to right,#ff7f50, #ff6b81);color:#fff;padding:5px 10px'
     )
-    if (response.config.data) {
-      printBlue('request payload')
-      console.log(JSON.parse(response.config.data))
-    }
-    printGradientRed('error message: ' + response.data.message)
-    console.groupEnd()
   }
 }
-const printList = (response, finished) => {
-  if (isDev) {
-    groupStart(response.config.method.toUpperCase() + ' ' + response.config.url)
-    if (response.config.params) {
-      console.log('%c↓↓↓↓↓↓ query params', 'color: #e67e22')
-      console.log(response.config.params)
-    }
-    if (response.config.data) {
-      printBlue('request payload')
-      console.log(JSON.parse(response.config.data))
-    }
-    printYellow('response other')
-    console.log(response.data.data.other)
-    printYellow('response page')
-    console.log({
-      pageNum: response.data.data.pageNo,
-      pageSize: response.data.data.pageSize,
-      totalPage: response.data.data.totalPage,
-      totalRecord: response.data.data.totalRecord,
-      finished: finished
-    })
-    printYellow('response list')
-    console.table(response.data.data.results)
-    if (response.data.message) {
-      printGradientRed('response message: ' + response.data.message)
-    }
-    console.groupEnd()
+const printRes = (type, val) => {
+  if (val) {
+    console.log(
+      '%c' + (type || 'response data') + ': ',
+      'background:linear-gradient(to right,#e67e22, #f3a158);color:#fff;padding:5px 10px'
+    )
+    console.log(val)
   }
 }
-const printData = response => {
-  if (isDev) {
-    groupStart(response.config.method.toUpperCase() + ' ' + response.config.url)
-    if (response.config.params) {
-      console.log('%c↓↓↓↓↓↓ query params', 'color: #e67e22')
-      console.log(response.config.params)
-    }
-    if (response.config.data) {
-      printBlue('request payload')
-      console.log(JSON.parse(response.config.data))
-    }
-    if (response.data && response.data.data) {
-      printColor('response data')
-      console.log(response.data.data)
-    } else {
-      printColor('response data')
-      console.log(response.data)
-    }
-    if (response.data.message) {
-      printGradientRed('response message' + response.data.message)
-    }
-    console.groupEnd()
+const printReq = (type, val) => {
+  if (val) {
+    console.log(
+      '%c' + (type || 'request payload') + ': ',
+      'background:linear-gradient(to right,#1e90ff, #56acff);color:#fff;padding:5px 10px'
+    )
+    console.log(val)
   }
+}
+const groupStart = val => {
+  let cord = []
+  while (cord.length < 7) {
+    let n = Math.floor(Math.random() * 7)
+    if (!cord.includes(rainbow[n])) {
+      cord.push(rainbow[n])
+    }
+  }
+  console.groupCollapsed(
+    '%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c>>>%c ' + val,
+    ...cord,
+    'color: #333'
+  )
 }
