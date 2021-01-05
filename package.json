@@ -34,7 +34,7 @@
   "dependencies": {
     "@megalo/api": "^0.5.7",
     "@megalo/vhtml-plugin": "^0.1.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "axios-miniprogram-adapter": "^0.2.4",
     "megalo": "^0.10.1",
     "octoparse": "^0.4.2",
